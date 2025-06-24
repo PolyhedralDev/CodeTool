@@ -27,6 +27,7 @@ dependencies {
         bundledPlugin("org.jetbrains.plugins.yaml")
     }
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("com.charleskorn.kaml:kaml:0.61.0")
 }
 
 intellijPlatform {
@@ -44,6 +45,12 @@ intellijPlatform {
 tasks.register<UpdateRegistryDataTask>("updateRegistryData") {
     mcVersion.set("1.21.5")
     serverJarUrl.set("https://piston-data.mojang.com/v1/objects/e6ec2f64e6080b9b5d9b471b291c33cc7f509733/server.jar")
+}
+
+tasks.register<Copy>("copyApiDocumentation") {
+    from("terraDocs/docs/config/documentation/addons")
+    include("*.yml")
+    into("src/main/resources/documentation/addons")
 }
 
 sourceSets {

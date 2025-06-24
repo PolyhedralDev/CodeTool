@@ -1,0 +1,14 @@
+config-biome:
+  configs:
+    BIOME:
+      registers: Biome
+  config-templates:
+    BIOME:
+      base:
+        params:
+          vanilla:
+            type: PlatformBiome
+          color:
+            type: Integer
+          tags:
+            type: Set<Tag>
