@@ -24,6 +24,18 @@ class TerrascriptTypedHandler : TypedHandlerDelegate() {
             document.insertString(offset, "\"")
             return Result.CONTINUE
         }
+        
+        if (c == '*') {
+            val document = editor.document
+            val offset = editor.caretModel.offset
+            
+            if (offset > 0 && document.charsSequence[offset - 2] == '/') {
+                document.insertString(offset, "/")
+                document.insertString(offset, "*")
+                editor.caretModel.moveToOffset(offset)
+                return Result.STOP
+            }
+        }
         return Result.CONTINUE
     }
 }

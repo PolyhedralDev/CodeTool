@@ -164,7 +164,10 @@ class TerrascriptBlock(
             TesfTypes.RPAREN,
             TesfTypes.STRING,
             TesfTypes.TRUE,
-            TesfTypes.FALSE
+            TesfTypes.FALSE,
+            TesfTypes.LITERAL,
+            TesfTypes.VARIABLE_USAGE,
+            TesfTypes.CALL_EXPRESSION
         )
 
         val expressionContainerTypes: TokenSet = TokenSet.create(

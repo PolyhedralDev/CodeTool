@@ -29,6 +29,7 @@ NUMBER=[0-9]+(\.[0-9]+)?
 STRING=\"([^\"]|\\.)*\"
 ID=[a-zA-Z_][a-zA-Z0-9_]*
 COMMENT="//"[^\r\n]*
+MULTILINE_COMMENT="/"\*([^*]|\*+[^*/])*\*"/"
 
 %%
 <YYINITIAL> {
@@ -73,6 +74,7 @@ COMMENT="//"[^\r\n]*
   {STRING}            { return STRING; }
   {ID}                { return ID; }
   {COMMENT}           { return COMMENT; }
+  {MULTILINE_COMMENT} { return COMMENT; }
 
 }
 
