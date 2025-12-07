@@ -43,8 +43,8 @@ intellijPlatform {
 }
 
 tasks.register<UpdateRegistryDataTask>("updateRegistryData") {
-    mcVersion.set("1.21.5")
-    serverJarUrl.set("https://piston-data.mojang.com/v1/objects/e6ec2f64e6080b9b5d9b471b291c33cc7f509733/server.jar")
+    mcVersion.set("1.21.11")
+    serverJarUrl.set("https://piston-data.mojang.com/v1/objects/205a55e13ce3104298dd84d1fa55bc524fb3ca51/server.jar")
 }
 
 tasks.register<Copy>("copyApiDocumentation") {
