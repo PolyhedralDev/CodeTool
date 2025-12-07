@@ -16,6 +16,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import org.jetbrains.yaml.YAMLFileType
 import org.jetbrains.yaml.psi.YAMLFile
 import java.util.concurrent.ConcurrentHashMap
+import kotlinx.serialization.decodeFromString
 
 class AddonDocsParser(private val project: Project) {
     private val cache = ConcurrentHashMap<String, AddonDocumentation>()
@@ -293,7 +294,7 @@ class AddonDocsParser(private val project: Project) {
      */
     fun findObjectDefinition(objectName: String): ObjectDefinition? {
         val allDocs = if (cache.isEmpty()) parseAllAddonDocs() else cache
-        return allDocs.values.mapNotNull { it.objects[objectName] }.firstOrNull()
+        return allDocs.values.firstNotNullOfOrNull { it.objects[objectName] }
     }
     
     /**
@@ -301,7 +302,7 @@ class AddonDocsParser(private val project: Project) {
      */
     fun findTemplateDefinition(category: String, templateName: String): TemplateDefinition? {
         val allDocs = if (cache.isEmpty()) parseAllAddonDocs() else cache
-        return allDocs.values.mapNotNull { it.templates[category]?.get(templateName) }.firstOrNull()
+        return allDocs.values.firstNotNullOfOrNull { it.templates[category]?.get(templateName) }
     }
     
     /**
