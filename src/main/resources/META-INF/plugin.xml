@@ -25,6 +25,10 @@
     </ul>
   ]]></description>
 
+    <change-notes><![CDATA[
+Introduce Minecraft 1.21.9 support and fix a few bugs
+    ]]></change-notes>
+
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
