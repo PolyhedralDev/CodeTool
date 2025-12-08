@@ -1,5 +1,6 @@
 package com.dfsek.terra.codetool.envman.ui
 
+import com.dfsek.terra.codetool.envman.service.state.TerraEnvironment
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
@@ -9,8 +10,8 @@ import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.table.DefaultTableModel
 
-class AddonList : JPanel(BorderLayout()) {
-    private val terraVersionHeader = JBLabel("Terra version: Unknown").apply {
+class AddonList(env: TerraEnvironment) : JPanel(BorderLayout()) {
+    private val terraVersionHeader = JBLabel("${env.name} @${env.terraVersion}").apply {
         font = JBUI.Fonts.label().asBold()
         border = JBUI.Borders.empty(10, 5)
     }
