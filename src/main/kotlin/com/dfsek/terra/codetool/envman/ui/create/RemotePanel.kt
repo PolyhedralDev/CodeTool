@@ -1,7 +1,7 @@
 package com.dfsek.terra.codetool.envman.ui.create
 
-import com.dfsek.terra.codetool.envman.service.download.TerraVersion
-import com.dfsek.terra.codetool.envman.service.download.TerraVersionExplorer
+import com.dfsek.terra.codetool.envman.service.version.TerraVersion
+import com.dfsek.terra.codetool.envman.service.version.TerraVersionExplorer
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.ui.ColoredListCellRenderer

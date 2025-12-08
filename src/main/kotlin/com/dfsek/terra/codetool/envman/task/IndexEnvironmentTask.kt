@@ -1,6 +1,6 @@
 package com.dfsek.terra.codetool.envman.task
 
-import com.dfsek.terra.codetool.envman.service.TerraEnvironment
+import com.dfsek.terra.codetool.envman.service.state.TerraEnvironment
 import com.dfsek.terra.codetool.envman.service.TerraEnvironmentService
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator

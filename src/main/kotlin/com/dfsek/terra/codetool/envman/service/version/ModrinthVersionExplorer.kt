@@ -1,4 +1,4 @@
-package com.dfsek.terra.codetool.envman.service.download
+package com.dfsek.terra.codetool.envman.service.version
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service

@@ -1,8 +1,10 @@
 package com.dfsek.terra.codetool.envman.ui.create
 
-import com.dfsek.terra.codetool.envman.service.download.JenkinsVersionExplorer
-import com.dfsek.terra.codetool.envman.service.download.ModrinthVersionExplorer
-import com.dfsek.terra.codetool.envman.service.download.TerraVersionExplorer
+import com.dfsek.terra.codetool.envman.service.version.JenkinsVersionExplorer
+import com.dfsek.terra.codetool.envman.service.version.ModrinthVersionExplorer
+import com.dfsek.terra.codetool.envman.service.version.downloadTerraJar
+import com.dfsek.terra.codetool.envman.task.EnvironmentCreationTask
+import com.dfsek.terra.codetool.envman.ui.EnvironmentServiceController
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -18,7 +20,7 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
 import java.awt.CardLayout
-import java.awt.Component
+import java.io.File
 import javax.swing.DefaultListModel
 import javax.swing.Icon
 import javax.swing.JComponent
@@ -27,6 +29,8 @@ import javax.swing.JPanel
 import javax.swing.event.DocumentEvent
 
 class AddEnvironmentDialog(val project: Project) : DialogWrapper(project) {
+    private val environmentServiceController = EnvironmentServiceController(project)
+    
     private val sidebarModel = DefaultListModel<SidebarRenderer.CellItem>().apply {
         addElement(SidebarRenderer.CellItem.LOCAL)
         addElement(SidebarRenderer.CellItem.JENKINS)
@@ -108,6 +112,38 @@ class AddEnvironmentDialog(val project: Project) : DialogWrapper(project) {
                 } else null
             }
         }
+    }
+    
+    override fun doOKAction() {
+        val selectedItem = sidebar.selectedValue ?: return
+        val envName = nameField.text.trim()
+        
+        when (selectedItem) {
+            SidebarRenderer.CellItem.LOCAL -> {
+                val path = localPanel.getSelectedPath() ?: return
+                EnvironmentCreationTask(
+                    project,
+                    environmentServiceController,
+                    envName
+                ) { basePath ->
+                    File(path).copyTo(File(basePath, "terra.jar"))
+                }.queue()
+            }
+            SidebarRenderer.CellItem.JENKINS, SidebarRenderer.CellItem.MODRINTH -> {
+                val panel = if (selectedItem == SidebarRenderer.CellItem.JENKINS) jenkinsPanel else modrinthPanel
+                val version = panel.getSelectedVersion() ?: return
+                
+                EnvironmentCreationTask(
+                    project,
+                    environmentServiceController,
+                    envName
+                ) { basePath ->
+                    downloadTerraJar(project, version, basePath)
+                }.queue()
+            }
+        }
+        
+        super.doOKAction()
     }
     
     object SidebarRenderer : ColoredListCellRenderer<SidebarRenderer.CellItem>() {
