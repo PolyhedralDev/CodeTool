@@ -1,4 +1,4 @@
-package com.dfsek.terra.codetool.envman
+package com.dfsek.terra.codetool.envman.ui
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow

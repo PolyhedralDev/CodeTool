@@ -1,5 +1,6 @@
-package com.dfsek.terra.codetool.envman
+package com.dfsek.terra.codetool.envman.ui
 
+import com.dfsek.terra.codetool.envman.ui.create.AddEnvironmentDialog
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
@@ -16,6 +17,7 @@ import javax.swing.DefaultListModel
 import javax.swing.JPanel
 
 class EnvironmentConfigPanel(private val project: Project) : JPanel(BorderLayout()) {
+    private val serviceController = EnvironmentServiceController(project)
     private val environmentList = JBList<String>(DefaultListModel()).apply {
         emptyText.text = "No environments"
         border = JBUI.Borders.empty()
@@ -32,7 +34,13 @@ class EnvironmentConfigPanel(private val project: Project) : JPanel(BorderLayout
         
         val actionGroup = DefaultActionGroup().apply {
             add(object : AnAction("Add Environment", null, AllIcons.General.Add) {
-                override fun actionPerformed(e: AnActionEvent) { /* Path selector logic */ }
+                override fun actionPerformed(e: AnActionEvent) {
+                    val project = e.project ?: return
+                    val dialog = AddEnvironmentDialog(project)
+                    if (dialog.showAndGet()) {
+                        serviceController.triggerIndexing()
+                    }
+                }
             })
             add(object : AnAction("Remove Environment", null, AllIcons.General.Remove) {
                 override fun actionPerformed(e: AnActionEvent) { /* Remove logic */ }

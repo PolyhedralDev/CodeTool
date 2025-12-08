@@ -1,4 +1,4 @@
-package com.dfsek.terra.codetool.envman
+package com.dfsek.terra.codetool.envman.ui
 
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
