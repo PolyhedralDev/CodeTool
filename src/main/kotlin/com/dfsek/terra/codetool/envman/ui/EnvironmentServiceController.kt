@@ -14,7 +14,6 @@ import java.io.File
 class EnvironmentServiceController(val project: Project) {
     val terraEnvironmentService = TerraEnvironmentService.getInstance()
     val versionDetector = VersionDetectionService.getInstance()
-    
     fun triggerIndexing() {
         ProgressManager.getInstance().run(IndexEnvironmentTask(project) {
             triggerUiReload()

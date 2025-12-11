@@ -69,6 +69,7 @@ Introduce Minecraft 1.21.9 support and fix a few bugs
         <fileBasedIndex implementation="com.dfsek.terra.codetool.project.FileTypeIndexExtension" />
 
         <toolWindow factoryClass="com.dfsek.terra.codetool.envman.ui.EnvironmentManagerToolWindowFactory" id="Terra Environments" secondary="true" anchor="bottom" icon="com.dfsek.terra.codetool.TerraIcons.EnvironmentManager"/>
+        <postStartupActivity implementation="com.dfsek.terra.codetool.envman.EnvironmentStartupIndexer" />
 
         <notificationGroup id="Terra Environment Notifications" displayType="BALLOON"/>
     </extensions>

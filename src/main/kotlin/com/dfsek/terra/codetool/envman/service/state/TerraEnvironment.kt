@@ -5,5 +5,5 @@ data class TerraEnvironment(
     var name: String = "",
     var path: String = "",
     var terraVersion: String = "",
-    var state: EnvironmentState = EnvironmentState.UNINITIALIZED
+    var tasksDone: MutableList<EnvironmentTasks> = mutableListOf()
 )

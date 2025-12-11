@@ -38,6 +38,8 @@ class TerraEnvironmentService : PersistentStateComponent<TerraEnvironmentState> 
         state.environments.add(environment)
     }
     
+    fun getParentDirectory(environment: TerraEnvironment) = File(environment.path)
+    
     override fun getState(): TerraEnvironmentState = state
     
     override fun loadState(state: TerraEnvironmentState) {
