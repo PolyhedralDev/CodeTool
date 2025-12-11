@@ -2,3 +2,6 @@
 	path = testProject
 	url = https://github.com/PolyhedralDev/TerraOverworldConfig.git
 	branch = 2.0-Terra-7.0
+[submodule "terraDocs"]
+	path = terraDocs
+	url = https://github.com/PolyhedralDev/TerraDocs.git

@@ -38,82 +38,40 @@ Introduce Minecraft 1.21.9 support and fix a few bugs
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="terrascript"
-                  implementationClass="com.dfsek.terra.codetool.TerrascriptFileType"
-                  fieldName="INSTANCE"
-                  language="terrascript"
-                  extensions="tesf"/>
-
-        <lang.parserDefinition language="terrascript"
-                               implementationClass="com.dfsek.terra.codetool.parsing.TerrascriptParserDefinition"/>
-
-        <lang.syntaxHighlighterFactory
-                language="terrascript"
-                implementationClass="com.dfsek.terra.codetool.syntax.TerrascriptSyntaxHighlighterFactory"/>
-
-        <colorSettingsPage implementation="com.dfsek.terra.codetool.syntax.TerrascriptColorSettingsPage"
-                           id="terrascript"
-                           order="last"/>
-
-        <lang.formatter language="terrascript"
-                        implementationClass="com.dfsek.terra.codetool.formatting.TerrascriptFormattingModelBuilder"/>
-
-        <completion.contributor language="terrascript"
-                                implementationClass="com.dfsek.terra.codetool.completion.TerrascriptCompletionContributor"/>
-
-        <psi.referenceContributor language="terrascript"
-                                  implementation="com.dfsek.terra.codetool.reference.TerrascriptReferenceContributor"/>
-
-        <lang.psiStructureViewFactory language="terrascript"
-                                      implementationClass="com.dfsek.terra.codetool.structure.TerrascriptStructureViewFactory"/>
-
-        <lang.refactoringSupport
-                language="terrascript"
-                implementationClass="com.dfsek.terra.codetool.reference.TerrascriptRefactoringSupportProvider"/>
-
-        <platform.backend.documentation.targetProvider
-                implementation="com.dfsek.terra.codetool.docs.TerrascriptDocumentationTargetProvider"/>
-
-        <codeInsight.parameterInfo
-                language="terrascript"
-                implementationClass="com.dfsek.terra.codetool.docs.TerrascriptParameterInfoHandler"/>
-
-        <annotator
-                language="terrascript"
-                implementationClass="com.dfsek.terra.codetool.annotator.TerrascriptUndefinedVariableAnnotator"/>
-
-        <annotator
-                language="terrascript"
-                implementationClass="com.dfsek.terra.codetool.annotator.TerrascriptUnusedVariableAnnotator"/>
-
-        <liveTemplateContext implementation="com.dfsek.terra.codetool.template.TerrascriptLiveTemplateContext"
-                             contextId="terrascript"/>
-
+        <fileType name="terrascript" implementationClass="com.dfsek.terra.codetool.TerrascriptFileType" fieldName="INSTANCE" language="terrascript" extensions="tesf"/>
+        <lang.parserDefinition language="terrascript" implementationClass="com.dfsek.terra.codetool.parsing.TerrascriptParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="terrascript" implementationClass="com.dfsek.terra.codetool.syntax.TerrascriptSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="com.dfsek.terra.codetool.syntax.TerrascriptColorSettingsPage" id="terrascript" order="last"/>
+        <lang.formatter language="terrascript" implementationClass="com.dfsek.terra.codetool.formatting.TerrascriptFormattingModelBuilder"/>
+        <completion.contributor language="terrascript" implementationClass="com.dfsek.terra.codetool.completion.TerrascriptCompletionContributor"/>
+        <psi.referenceContributor language="terrascript" implementation="com.dfsek.terra.codetool.reference.TerrascriptReferenceContributor"/>
+        <lang.psiStructureViewFactory language="terrascript" implementationClass="com.dfsek.terra.codetool.structure.TerrascriptStructureViewFactory"/>
+        <lang.refactoringSupport language="terrascript" implementationClass="com.dfsek.terra.codetool.reference.TerrascriptRefactoringSupportProvider"/>
+        <platform.backend.documentation.targetProvider implementation="com.dfsek.terra.codetool.docs.TerrascriptDocumentationTargetProvider"/>
+        <codeInsight.parameterInfo language="terrascript" implementationClass="com.dfsek.terra.codetool.docs.TerrascriptParameterInfoHandler"/>
+        <annotator language="terrascript" implementationClass="com.dfsek.terra.codetool.annotator.TerrascriptUndefinedVariableAnnotator"/>
+        <annotator language="terrascript" implementationClass="com.dfsek.terra.codetool.annotator.TerrascriptUnusedVariableAnnotator"/>
+        <liveTemplateContext implementation="com.dfsek.terra.codetool.template.TerrascriptLiveTemplateContext" contextId="terrascript"/>
         <defaultLiveTemplates file="/liveTemplates/terrascript.xml"/>
-
-        <lang.braceMatcher
-                language="terrascript"
-                implementationClass="com.dfsek.terra.codetool.editor.TerrascriptBraceMatcher"/>
-
+        <lang.braceMatcher language="terrascript" implementationClass="com.dfsek.terra.codetool.editor.TerrascriptBraceMatcher"/>
         <typedHandler implementation="com.dfsek.terra.codetool.editor.TerrascriptTypedHandler"/>
-
         <languageInjector implementation="com.dfsek.terra.codetool.inject.TerrascriptStringInjector"/>
 
-        <fileType name="terrascript_blockstate"
-                  implementationClass="com.dfsek.terra.codetool.stringcomp.StringcompFileType"
-                  fieldName="INSTANCE"
-                  language="terrascript_blockstate"
-                  extensions="minecraft_blockstate"/>
-
-        <lang.parserDefinition language="terrascript_blockstate"
-                               implementationClass="com.dfsek.terra.codetool.stringcomp.StringcompParserDefinition"/>
-
-        <completion.contributor
-                language="terrascript_blockstate"
-                implementationClass="com.dfsek.terra.codetool.stringcomp.completion.StringcompCompletionContributor"/>
+        <fileType name="terrascript_blockstate" implementationClass="com.dfsek.terra.codetool.stringcomp.StringcompFileType" fieldName="INSTANCE" language="terrascript_blockstate" extensions="minecraft_blockstate"/>
+        <lang.parserDefinition language="terrascript_blockstate" implementationClass="com.dfsek.terra.codetool.stringcomp.StringcompParserDefinition"/>
+        <completion.contributor language="terrascript_blockstate" implementationClass="com.dfsek.terra.codetool.stringcomp.completion.StringcompCompletionContributor"/>
 
         <iconProvider implementation="com.dfsek.terra.codetool.icon.YamlIconProvider"/>
 
+        <statusBarWidgetFactory implementation="com.dfsek.terra.codetool.project.ProjectStatusBarWidgetFactory" id="terra_project"/>
+        <fileBasedIndex implementation="com.dfsek.terra.codetool.project.ProjectRootIndexExtension" />
+        <fileBasedIndex implementation="com.dfsek.terra.codetool.project.NameIndexExtension" />
+        <fileBasedIndex implementation="com.dfsek.terra.codetool.project.FileTypeIndexExtension" />
+
+        <toolWindow factoryClass="com.dfsek.terra.codetool.envman.ui.EnvironmentManagerToolWindowFactory" id="Terra Environments" secondary="true" anchor="bottom" icon="com.dfsek.terra.codetool.TerraIcons.EnvironmentManager"/>
+        <postStartupActivity implementation="com.dfsek.terra.codetool.envman.EnvironmentStartupIndexer" />
+
+        <notificationGroup id="Terra Environment Notifications" displayType="BALLOON"/>
     </extensions>
     <actions>
         <action id="NEW_TERRASCRIPT_FILE"
