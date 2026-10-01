@@ -1,0 +1,18 @@
+config-feature:
+  configs:
+    FEATURE:
+      registers: Feature
+  config-templates:
+    FEATURE:
+      base:
+        params:
+          id:
+            type: String
+          distributor:
+            type: Distributor
+          locator:
+            type: Locator
+          structures.structures:
+            type: WeightedList<Structure>
+          structures.distribution:
+            type: NoiseSampler

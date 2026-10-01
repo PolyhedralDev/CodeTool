@@ -1,0 +1,29 @@
+config-palette:
+  objects:
+    PaletteLayer:
+      type: MULTI_TYPE
+      types:
+        map:
+          params:
+            materials:
+              type: WeightedList<Block>
+            layers:
+              type: Integer
+            sampler:
+              type: NoiseSampler
+              default: "None"
+
+  configs:
+    PALETTE:
+      registers: Palette
+  config-templates:
+    PALETTE:
+      base:
+        params:
+          id: 
+            type: String
+          layers:
+            type: List<PaletteLayer>
+          sampler:
+            type: NoiseSampler
+            default: "Constant 0"
