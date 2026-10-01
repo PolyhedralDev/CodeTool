@@ -1,0 +1,457 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://terra.polydev.org/schema/terra-addon-doc-v1.schema.json",
+  "title": "Terra Addon Documentation v1",
+  "description": "Metadata contributed by a Terra addon for configuration typing, completion, validation, and documentation. Catalog merge semantics apply across manifests with the same type or file identifier.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "docVersion"],
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/identifier",
+      "description": "The addon identifier. It must match the addon metadata identifier."
+    },
+    "docVersion": {
+      "const": 1,
+      "description": "The Terra addon documentation format version."
+    },
+    "description": {
+      "type": "string"
+    },
+    "types": {
+      "type": "object",
+      "description": "Types declared or extended by this addon. An unqualified name belongs to this manifest's id; a qualified name may extend another addon's type.",
+      "propertyNames": {
+        "$ref": "#/$defs/typeIdentifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/schema"
+      }
+    },
+    "files": {
+      "type": "object",
+      "description": "Root schemas for Terra configuration files. pack.yml applies only to that exact file. Other keys match a configuration file's root type value.",
+      "properties": {
+        "pack.yml": {
+          "$ref": "#/$defs/objectSchema"
+        }
+      },
+      "patternProperties": {
+        "^[A-Z][A-Z0-9_]*$": {
+          "$ref": "#/$defs/objectSchema"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]*$"
+    },
+    "typeIdentifier": {
+      "type": "string",
+      "pattern": "^(?:[a-z][a-z0-9._-]*:)?[A-Za-z][A-Za-z0-9._-]*$"
+    },
+    "variantName": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]*$"
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "equals"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional pack-root-relative YAML file, such as pack.yml. When present, path starts at that file's root value."
+        },
+        "path": {
+          "type": "array",
+          "description": "Without file, starts at the YAML value governed by the declaration. A string selects a literal mapping key; .. moves to the containing YAML value; a nonnegative integer selects a sequence index. An empty path selects the starting value. Dots in keys have no special meaning.",
+          "items": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              { "type": "integer", "minimum": 0 }
+            ]
+          }
+        },
+        "equals": {
+          "$ref": "#/$defs/scalarValue",
+          "description": "Scalar value compared by parsed value and scalar type, without string coercion. Missing or unresolved paths leave the condition unresolved; YAML null is a resolved value."
+        }
+      }
+    },
+    "scalarValue": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "boolean" },
+        { "type": "null" }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "nullable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the YAML null value is valid. This does not make an object field optional."
+        },
+        "deprecated": {
+          "type": "boolean",
+          "default": false
+        },
+        "examples": {
+          "type": "array",
+          "items": {}
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "required"],
+      "properties": {
+        "schema": {
+          "$ref": "#/$defs/schema"
+        },
+        "when": {
+          "$ref": "#/$defs/condition",
+          "description": "Controls whether this field contribution applies, including requiredness. Traversal starts at the field value's location, even when the field is absent."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether this key must be present. This is independent of nullability and defaults."
+        },
+        "default": {
+          "description": "The value Terra uses when this optional field is absent."
+        },
+        "description": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "deprecated": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "anySchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "any" },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "An optional documentation-only label. It does not constrain accepted YAML values."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "stringSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "string" },
+            "pattern": { "type": "string" },
+            "minLength": { "type": "integer", "minimum": 0 },
+            "maxLength": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "integerSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "integer" },
+            "minimum": { "type": "integer" },
+            "maximum": { "type": "integer" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "floatSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "float" },
+            "minimum": { "type": "number" },
+            "maximum": { "type": "number" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "booleanSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "boolean" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "literalSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "literal" },
+            "value": { "$ref": "#/$defs/scalarValue" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "enumSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "values"],
+          "properties": {
+            "kind": { "const": "enum" },
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/scalarValue" }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "typeSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "target"],
+          "properties": {
+            "kind": { "const": "type" },
+            "target": {
+              "$ref": "#/$defs/typeIdentifier",
+              "description": "The declared type whose inline configuration shape is expected."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "referenceSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "target"],
+          "properties": {
+            "kind": { "const": "ref" },
+            "target": {
+              "$ref": "#/$defs/typeIdentifier",
+              "description": "The configuration type whose registered identifier is expected."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "expressionSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "expr" },
+            "name": {
+              "type": "string",
+              "description": "The expression language name shown in documentation."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "listSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "element"],
+          "properties": {
+            "kind": { "const": "list" },
+            "element": { "$ref": "#/$defs/schema" },
+            "minItems": { "type": "integer", "minimum": 0 },
+            "maxItems": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "setSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "element"],
+          "properties": {
+            "kind": { "const": "set" },
+            "element": { "$ref": "#/$defs/schema" },
+            "minItems": { "type": "integer", "minimum": 0 },
+            "maxItems": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "keyMapSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "keys", "values"],
+          "properties": {
+            "kind": { "const": "keyMap" },
+            "keys": { "$ref": "#/$defs/schema" },
+            "values": { "$ref": "#/$defs/schema" },
+            "minEntries": { "type": "integer", "minimum": 0 },
+            "maxEntries": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "objectSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "object" },
+            "when": {
+              "$ref": "#/$defs/condition",
+              "description": "Controls whether this object contribution applies. For a union variant it also controls variant availability. Traversal starts at the configured object value."
+            },
+            "extends": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/typeIdentifier" },
+              "description": "Object types whose fields are structurally inherited. Targets must resolve to object schemas."
+            },
+            "fields": {
+              "type": "object",
+              "propertyNames": { "type": "string", "minLength": 1 },
+              "additionalProperties": { "$ref": "#/$defs/field" }
+            },
+            "additionalProperties": {
+              "oneOf": [
+                { "const": false },
+                { "$ref": "#/$defs/schema" }
+              ],
+              "description": "Whether keys not listed in fields are forbidden or must satisfy a schema. Applies after all active contributions and inherited fields are merged. Omission contributes no rule."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "oneOfSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind", "options"],
+          "properties": {
+            "kind": { "const": "oneOf" },
+            "options": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/schema" }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "unionSchema": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/metadata" },
+        {
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "union" },
+            "discriminator": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The object field containing the selected variant name. Declarations merged into an existing union may omit it."
+            },
+            "values": {
+              "type": "object",
+              "propertyNames": { "$ref": "#/$defs/variantName" },
+              "additionalProperties": { "$ref": "#/$defs/objectSchema" },
+              "description": "Variants selected by the discriminator. Multiple addon manifests merge these entries by name."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "schema": {
+      "oneOf": [
+        { "$ref": "#/$defs/anySchema" },
+        { "$ref": "#/$defs/stringSchema" },
+        { "$ref": "#/$defs/integerSchema" },
+        { "$ref": "#/$defs/floatSchema" },
+        { "$ref": "#/$defs/booleanSchema" },
+        { "$ref": "#/$defs/literalSchema" },
+        { "$ref": "#/$defs/enumSchema" },
+        { "$ref": "#/$defs/typeSchema" },
+        { "$ref": "#/$defs/referenceSchema" },
+        { "$ref": "#/$defs/expressionSchema" },
+        { "$ref": "#/$defs/listSchema" },
+        { "$ref": "#/$defs/setSchema" },
+        { "$ref": "#/$defs/keyMapSchema" },
+        { "$ref": "#/$defs/objectSchema" },
+        { "$ref": "#/$defs/oneOfSchema" },
+        { "$ref": "#/$defs/unionSchema" }
+      ]
+    }
+  }
+}
